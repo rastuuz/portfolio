@@ -38,17 +38,6 @@ const Projects = () => {
       poster: "/img/figma.png",
       imageAlt: "UI/UX Cinema Ticket App Design",
     },
-     {
-      title: "UI/UX Design - Cinema Ticket App",
-      description:
-        "A modern UI/UX design for a cinema ticket booking application. Features include movie selection, seat reservation, payment integration, and real-time booking confirmation with an intuitive and user-friendly interface.",
-      tech: ["Figma", "UI/UX", "Prototyping", "Design System"],
-      icon: <FaPalette />,
-      featured: false,
-      video: "/videos/ui-ux.mp4",
-      poster: "/img/figma.png",
-      imageAlt: "UI/UX Cinema Ticket App Design",
-    },
     {
       title: "RASTU Crypto Trading Platform",
       description:

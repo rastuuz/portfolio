@@ -11,7 +11,7 @@ import {
 const About = () => {
   const stats = [
     { number: '2+', label: 'Years Learning & Coding' },
-    { number: '5+', label: 'Projects Completed' },
+    { number: '6+', label: 'Projects Completed' },
   ]
 
   const skills = [
