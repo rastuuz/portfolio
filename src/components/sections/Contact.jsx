@@ -32,6 +32,7 @@ const Contact = () => {
       value: 'Tegal, Indonesia',
       link: '#'
     },
+    
   ]
 
   const socialLinks = [
