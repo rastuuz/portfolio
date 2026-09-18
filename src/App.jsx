@@ -343,7 +343,7 @@ function App() {
                     text-gray-600
                   "
                 >
-                  01 / 01
+                
                 </span>
               </motion.div>
 
