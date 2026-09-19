@@ -1,31 +1,99 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaExternalLinkAlt, FaTimes } from "react-icons/fa";
+import {
+  FaExternalLinkAlt,
+  FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import { useLanguage } from "../../context/LanguageContext";
 
 const Certificates = () => {
   const { language } = useLanguage();
 
   const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [currentPmrCertificate, setCurrentPmrCertificate] = useState(0);
 
   const certificates = [
     {
+      id: "google-digital-marketing",
       title:
         language === "en"
           ? "Google Digital Marketing"
           : "Google Digital Marketing",
       issuer: "Google",
       image: "/img/marketing.jpeg",
+      type: "single",
     },
+
     {
+      id: "outing-class",
       title:
         language === "en"
           ? "Outing Class Certificate"
           : "Sertifikat Outing Class",
       issuer: "School Activity",
       image: "/img/oc.jpeg",
+      type: "single",
+    },
+
+    {
+      id: "pmr-certificates",
+      title:
+        language === "en"
+          ? "PMR Certificates"
+          : "Sertifikat PMR",
+      issuer: "Palang Merah Indonesia",
+      image: "/img/pmr3.jpeg",
+      type: "multiple",
+
+      images: [
+        "/img/pmr3.jpeg",
+        "/img/pmr2.jpeg",
+        "/img/pmr1.jpeg",
+      ],
     },
   ];
+
+  // =========================
+  // OPEN CERTIFICATE
+  // =========================
+
+  const openCertificate = (certificate) => {
+    setSelectedCertificate(certificate);
+
+    if (certificate.type === "multiple") {
+      setCurrentPmrCertificate(0);
+    }
+  };
+
+  // =========================
+  // PREVIOUS PMR
+  // =========================
+
+  const previousPmrCertificate = () => {
+    setCurrentPmrCertificate((prev) => {
+      if (prev === 0) {
+        return selectedCertificate.images.length - 1;
+      }
+
+      return prev - 1;
+    });
+  };
+
+  // =========================
+  // NEXT PMR
+  // =========================
+
+  const nextPmrCertificate = () => {
+    setCurrentPmrCertificate((prev) => {
+      if (prev === selectedCertificate.images.length - 1) {
+        return 0;
+      }
+
+      return prev + 1;
+    });
+  };
 
   return (
     <section
@@ -41,6 +109,7 @@ const Certificates = () => {
       <div className="absolute bottom-0 -left-40 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container-custom mx-auto relative z-10">
+
         {/* =========================
             SECTION HEADER
         ========================= */}
@@ -65,17 +134,11 @@ const Certificates = () => {
           <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold text-cream">
             {language === "en" ? (
               <>
-                My{" "}
-                <span className="gold-text">
-                  Certificates
-                </span>
+                My <span className="gold-text">Certificates</span>
               </>
             ) : (
               <>
-                <span className="gold-text">
-                  Sertifikat
-                </span>{" "}
-                Saya
+                <span className="gold-text">Sertifikat</span> Saya
               </>
             )}
           </h2>
@@ -91,10 +154,11 @@ const Certificates = () => {
             CERTIFICATE GRID
         ========================= */}
 
-        <div className="grid md:grid-cols-2 gap-7 lg:gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 lg:gap-8 max-w-6xl mx-auto">
+
           {certificates.map((certificate, index) => (
             <motion.div
-              key={certificate.title}
+              key={certificate.id}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -123,9 +187,14 @@ const Certificates = () => {
                   group-hover:shadow-[0_25px_60px_rgba(0,0,0,0.25)]
                 "
               >
+
+                {/* =========================
+                    CERTIFICATE IMAGE
+                ========================= */}
+
                 <button
                   type="button"
-                  onClick={() => setSelectedCertificate(certificate)}
+                  onClick={() => openCertificate(certificate)}
                   className="
                     block
                     w-full
@@ -150,6 +219,8 @@ const Certificates = () => {
                     "
                   />
 
+                  {/* DARK GRADIENT */}
+
                   <div
                     className="
                       absolute
@@ -162,6 +233,8 @@ const Certificates = () => {
                       pointer-events-none
                     "
                   />
+
+                  {/* HOVER VIEW */}
 
                   <div
                     className="
@@ -210,32 +283,38 @@ const Certificates = () => {
                     </div>
                   </div>
 
-                  {/* Year */}
-                  {certificate.year && (
+                  {/* PMR INDICATOR */}
+
+                  {certificate.type === "multiple" && (
                     <div
                       className="
                         absolute
-                        top-5
-                        right-5
+                        bottom-4
+                        right-4
                         px-3
                         py-1.5
                         rounded-full
-                        bg-dark/70
+                        bg-dark/80
                         backdrop-blur-md
                         border
-                        border-white/10
-                        text-cream/60
+                        border-gold/20
+                        text-gold
                         text-[10px]
                         font-inter
                         tracking-wider
                       "
                     >
-                      {certificate.year}
+                      3 Certificates
                     </div>
                   )}
                 </button>
 
+                {/* =========================
+                    CARD CONTENT
+                ========================= */}
+
                 <div className="p-6 md:p-7">
+
                   <p
                     className="
                       text-gold/60
@@ -267,9 +346,11 @@ const Certificates = () => {
 
                   <div className="h-px bg-white/5 my-5" />
 
+                  {/* VIEW BUTTON */}
+
                   <button
                     type="button"
-                    onClick={() => setSelectedCertificate(certificate)}
+                    onClick={() => openCertificate(certificate)}
                     className="
                       inline-flex
                       items-center
@@ -292,7 +373,10 @@ const Certificates = () => {
                   </button>
                 </div>
 
-                {/* Bottom Gold Line */}
+                {/* =========================
+                    GOLD BOTTOM LINE
+                ========================= */}
+
                 <div
                   className="
                     absolute
@@ -309,6 +393,7 @@ const Certificates = () => {
               </div>
             </motion.div>
           ))}
+
         </div>
 
         {/* =========================
@@ -324,14 +409,12 @@ const Certificates = () => {
           }}
           viewport={{ once: true }}
           className="flex items-center justify-center gap-4 mt-16"
-        >
-            
-        </motion.div>
+        />
       </div>
 
-      {/* =========================
+      {/* ==================================================
           CERTIFICATE MODAL
-      ========================= */}
+      ================================================== */}
 
       <AnimatePresence>
         {selectedCertificate && (
@@ -388,7 +471,11 @@ const Certificates = () => {
               "
               onClick={(e) => e.stopPropagation()}
             >
-              {/* CLOSE BUTTON */}
+
+              {/* =========================
+                  CLOSE BUTTON
+              ========================= */}
+
               <button
                 type="button"
                 onClick={() => setSelectedCertificate(null)}
@@ -419,7 +506,10 @@ const Certificates = () => {
                 <FaTimes className="text-sm" />
               </button>
 
-              {/* CERTIFICATE IMAGE */}
+              {/* =========================
+                  IMAGE CONTAINER
+              ========================= */}
+
               <div
                 className="
                   p-3
@@ -431,17 +521,178 @@ const Certificates = () => {
                   justify-center
                 "
               >
-                <img
-                  src={selectedCertificate.image}
-                  alt={selectedCertificate.title}
-                  className="
-                    w-full
-                    h-auto
-                    max-h-[82vh]
-                    object-contain
-                    rounded-xl
-                  "
-                />
+
+                {/* ==================================================
+                    MULTIPLE CERTIFICATES - PMR
+                ================================================== */}
+
+                {selectedCertificate.type === "multiple" ? (
+                  <div className="relative w-full flex items-center justify-center">
+
+                    {/* =========================
+                        PREVIOUS BUTTON
+                    ========================= */}
+
+                    <button
+                      type="button"
+                      onClick={previousPmrCertificate}
+                      className="
+                        absolute
+                        left-2
+                        md:left-5
+                        z-20
+                        w-10
+                        h-10
+                        md:w-12
+                        md:h-12
+                        rounded-full
+                        bg-dark/80
+                        backdrop-blur-md
+                        border
+                        border-white/10
+                        flex
+                        items-center
+                        justify-center
+                        text-cream/70
+                        hover:text-gold
+                        hover:border-gold/30
+                        hover:bg-dark
+                        transition-all
+                        duration-300
+                      "
+                      aria-label="Previous certificate"
+                    >
+                      <FaChevronLeft />
+                    </button>
+
+                    {/* =========================
+                        PMR CERTIFICATE IMAGE
+                    ========================= */}
+
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={currentPmrCertificate}
+                        initial={{
+                          opacity: 0,
+                          x: 20,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: -20,
+                        }}
+                        transition={{
+                          duration: 0.25,
+                        }}
+                        src={
+                          selectedCertificate.images[
+                            currentPmrCertificate
+                          ]
+                        }
+                        alt={`${selectedCertificate.title} ${
+                          currentPmrCertificate + 1
+                        }`}
+                        className="
+                          w-full
+                          h-auto
+                          max-h-[82vh]
+                          object-contain
+                          rounded-xl
+                        "
+                      />
+                    </AnimatePresence>
+
+                    {/* =========================
+                        NEXT BUTTON
+                    ========================= */}
+
+                    <button
+                      type="button"
+                      onClick={nextPmrCertificate}
+                      className="
+                        absolute
+                        right-2
+                        md:right-5
+                        z-20
+                        w-10
+                        h-10
+                        md:w-12
+                        md:h-12
+                        rounded-full
+                        bg-dark/80
+                        backdrop-blur-md
+                        border
+                        border-white/10
+                        flex
+                        items-center
+                        justify-center
+                        text-cream/70
+                        hover:text-gold
+                        hover:border-gold/30
+                        hover:bg-dark
+                        transition-all
+                        duration-300
+                      "
+                      aria-label="Next certificate"
+                    >
+                      <FaChevronRight />
+                    </button>
+
+                    {/* =========================
+                        COUNTER
+                    ========================= */}
+
+                    <div
+                      className="
+                        absolute
+                        bottom-3
+                        left-1/2
+                        -translate-x-1/2
+                        px-4
+                        py-2
+                        rounded-full
+                        bg-dark/80
+                        backdrop-blur-md
+                        border
+                        border-white/10
+                        text-cream/70
+                        text-xs
+                        font-inter
+                      "
+                    >
+                      {currentPmrCertificate + 1} /{" "}
+                      {selectedCertificate.images.length}
+                    </div>
+                  </div>
+                ) : (
+                  /* ==================================================
+                     SINGLE CERTIFICATE
+                  ================================================== */
+
+                  <motion.img
+                    initial={{
+                      opacity: 0,
+                    }}
+                    animate={{
+                      opacity: 1,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                    }}
+                    src={selectedCertificate.image}
+                    alt={selectedCertificate.title}
+                    className="
+                      w-full
+                      h-auto
+                      max-h-[82vh]
+                      object-contain
+                      rounded-xl
+                    "
+                  />
+                )}
               </div>
             </motion.div>
           </motion.div>

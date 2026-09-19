@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -10,6 +9,7 @@ import {
   FaPalette,
   FaPlay,
   FaCoins,
+  FaRobot,
 } from "react-icons/fa";
 
 import { useLanguage } from "../../context/LanguageContext";
@@ -60,6 +60,34 @@ const Projects = () => {
       poster: "/img/figma.png",
 
       imageAlt: "UI/UX Cinema Ticket App Design",
+    },
+
+    {
+      title: language === "en" ? "AI Desktop Assistant" : "Asisten AI Desktop",
+
+      description:
+        language === "en"
+          ? "An AI-powered desktop assistant built with Python that can understand voice commands and automate computer tasks. It can open applications such as Chrome, File Explorer, Calculator, and other software automatically based on spoken commands. The system combines speech recognition, text-to-speech, and desktop automation to provide a more natural and efficient way to interact with a computer."
+          : "Asisten desktop berbasis AI yang dibuat menggunakan Python untuk memahami perintah suara dan mengotomatiskan berbagai tugas di komputer. Asisten ini dapat membuka aplikasi seperti Chrome, File Explorer, Calculator, dan software lainnya secara otomatis berdasarkan perintah yang diucapkan. Sistem ini menggabungkan speech recognition, text-to-speech, dan otomatisasi desktop untuk memberikan cara berinteraksi dengan komputer yang lebih natural dan efisien.",
+
+      tech: [
+        "Python",
+        "Speech Recognition",
+        "Text-to-Speech",
+        "PyAutoGUI",
+        "OS Automation",
+      ],
+
+      icon: <FaRobot />,
+
+      featured: false,
+
+      video: "/videos/ai.mp4",
+
+      poster: "/img/fotoai.png",
+
+      imageAlt:
+        language === "en" ? "AI Desktop Assistant" : "Asisten AI Desktop",
     },
 
     {
@@ -143,14 +171,13 @@ const Projects = () => {
 
   const otherProjects = projects.filter((p) => !p.featured);
 
-  const toggleVideo = (index) => {
-    setPlayingVideo(playingVideo === index ? null : index);
+  const toggleVideo = (id) => {
+    setPlayingVideo(playingVideo === id ? null : id);
   };
 
   return (
     <section id="projects" className="section-padding">
       <div className="container-custom mx-auto">
-
         {/* HEADER */}
 
         <motion.div
@@ -160,37 +187,28 @@ const Projects = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-
           <p className="text-gold font-inter tracking-[0.3em] uppercase text-sm mb-3">
             {language === "en" ? "Portfolio" : "Portfolio"}
           </p>
 
           <h2 className="font-playfair text-4xl md:text-5xl font-bold">
-
             {language === "en" ? "Featured" : "Project"}{" "}
-
             <span className="gold-text">
               {language === "en" ? "Projects" : "Unggulan"}
             </span>
-
           </h2>
 
           <p className="text-cream/50 mt-4 max-w-2xl mx-auto">
-
             {language === "en"
               ? "Here are some of my recent projects that showcase my skills, creativity, and experience in technology and software development."
               : "Berikut beberapa project terbaru saya yang menunjukkan kemampuan, kreativitas, dan pengalaman saya dalam teknologi serta pengembangan software."}
-
           </p>
-
         </motion.div>
 
         {/* FEATURED PROJECTS */}
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-
           {featuredProjects.map((project, index) => (
-
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -202,22 +220,12 @@ const Projects = () => {
               viewport={{ once: true }}
               className="glass-effect rounded-2xl overflow-hidden hover:border-gold/30 transition-all duration-500 hover:transform hover:-translate-y-2 group border-gold/10 border"
             >
-
               {/* VIDEO */}
 
               {project.video ? (
-
                 <div className="relative bg-gradient-to-b from-black/80 to-black/40 group/video">
-
-                  <div
-                    className="relative w-full"
-                    style={{
-                      paddingBottom: "56.25%",
-                    }}
-                  >
-
+                  <div className="relative w-full aspect-video">
                     {playingVideo === index ? (
-
                       <video
                         src={project.video}
                         controls
@@ -228,20 +236,11 @@ const Projects = () => {
                       >
                         Your browser does not support the video tag.
                       </video>
-
                     ) : (
-
                       <>
-
                         <img
-                          src={
-                            project.poster ||
-                            "/img/default-poster.jpg"
-                          }
-                          alt={
-                            project.imageAlt ||
-                            project.title
-                          }
+                          src={project.poster || "/img/default-poster.jpg"}
+                          alt={project.imageAlt || project.title}
                           className="absolute inset-0 w-full h-full object-contain bg-black"
                         />
 
@@ -251,83 +250,47 @@ const Projects = () => {
                           onClick={() => toggleVideo(index)}
                           className="absolute inset-0 flex items-center justify-center cursor-pointer group-hover/video:scale-105 transition-all duration-300"
                         >
-
                           <div className="relative">
-
                             <div className="absolute inset-0 rounded-full bg-gold/20 animate-ping" />
 
                             <div className="relative w-20 h-20 rounded-full bg-gold flex items-center justify-center transform transition-all duration-300 hover:scale-110 shadow-2xl shadow-gold/30">
-
                               <FaPlay className="text-black text-2xl ml-1" />
-
                             </div>
-
                           </div>
-
                         </div>
 
                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-
                           <span className="bg-black/50 backdrop-blur-sm text-white text-xs px-4 py-2 rounded-full border border-white/10">
-
-                            ▶{" "}
-                            {language === "en"
-                              ? "Watch Demo"
-                              : "Lihat Demo"}
-
+                            ▶ {language === "en" ? "Watch Demo" : "Lihat Demo"}
                           </span>
-
                         </div>
-
                       </>
-
                     )}
-
                   </div>
-
                 </div>
-
               ) : (
-
                 project.image && (
-
-                  <div className="relative h-56 md:h-64 overflow-hidden">
-
+                  <div className="relative w-full aspect-video overflow-hidden">
                     <img
                       src={project.image}
-                      alt={
-                        project.imageAlt ||
-                        project.title
-                      }
+                      alt={project.imageAlt || project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
                   </div>
-
                 )
-
               )}
 
               {/* CONTENT */}
 
               <div className="p-8">
-
                 <div className="flex items-center gap-3 mb-4">
-
-                  <span className="text-gold text-2xl">
-                    {project.icon}
-                  </span>
+                  <span className="text-gold text-2xl">{project.icon}</span>
 
                   <span className="text-xs text-gold font-inter tracking-wider uppercase">
-
-                    {language === "en"
-                      ? "Featured"
-                      : "Unggulan"}
-
+                    {language === "en" ? "Featured" : "Unggulan"}
                   </span>
-
                 </div>
 
                 <h3 className="font-playfair text-2xl font-bold text-cream mb-3">
@@ -339,34 +302,23 @@ const Projects = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-
                   {project.tech.map((tech, i) => (
-
                     <span
                       key={i}
                       className="px-3 py-1 text-xs bg-gold/10 text-gold rounded-full"
                     >
                       {tech}
                     </span>
-
                   ))}
-
                 </div>
-
               </div>
-
             </motion.div>
-
           ))}
-
         </div>
-
         {/* OTHER PROJECTS */}
 
         <div className="grid md:grid-cols-3 gap-6">
-
           {otherProjects.map((project, index) => (
-
             <motion.div
               key={index}
               initial={{
@@ -384,31 +336,83 @@ const Projects = () => {
               viewport={{
                 once: true,
               }}
-              className="glass-effect rounded-xl overflow-hidden hover:border-gold/30 transition-all duration-500 hover:transform hover:-translate-y-2 group"
+              className="glass-effect rounded-xl overflow-hidden hover:border-gold/30 transition-all duration-500 hover:-translate-y-2 group"
             >
+              {/* MEDIA */}
+              {project.video ? (
+                <div className="relative bg-black overflow-hidden">
+                  <div className="relative w-full aspect-video">
+                    {playingVideo === `other-${index}` ? (
+                      <video
+                        src={project.video}
+                        controls
+                        autoPlay
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-contain bg-black"
+                        controlsList="nodownload"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <>
+                        {/* COVER IMAGE */}
+                        <img
+                          src={project.poster || project.image}
+                          alt={project.imageAlt || project.title}
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
 
-              {project.image && (
+                        {/* OVERLAY */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                <div className="relative h-40 overflow-hidden">
+                        {/* PLAY BUTTON */}
+                        <button
+                          type="button"
+                          onClick={() => toggleVideo(`other-${index}`)}
+                          className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                          aria-label={
+                            language === "en"
+                              ? `Play ${project.title}`
+                              : `Putar ${project.title}`
+                          }
+                        >
+                          <div className="relative">
+                            <div className="absolute inset-0 rounded-full bg-gold/20 animate-ping" />
 
-                  <img
-                    src={project.image}
-                    alt={
-                      project.imageAlt ||
-                      project.title
-                    }
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+                            <div className="relative w-16 h-16 rounded-full bg-gold flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl shadow-gold/30">
+                              <FaPlay className="text-black text-lg ml-1" />
+                            </div>
+                          </div>
+                        </button>
 
+                        {/* WATCH DEMO */}
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+                          <span className="bg-black/60 backdrop-blur-sm text-white text-[10px] px-3 py-1.5 rounded-full border border-white/10">
+                            ▶ {language === "en" ? "Watch Demo" : "Lihat Demo"}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
+              ) : (
+                /* IMAGE PROJECT */
+                project.image && (
+                  <div className="relative w-full aspect-video overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.imageAlt || project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
 
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                )
               )}
 
+              {/* CONTENT */}
               <div className="p-6">
-
-                <div className="text-gold text-xl mb-3">
-                  {project.icon}
-                </div>
+                <div className="text-gold text-xl mb-3">{project.icon}</div>
 
                 <h3 className="font-playfair text-xl font-bold text-cream mb-2">
                   {project.title}
@@ -419,34 +423,22 @@ const Projects = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-1 mb-4">
-
-                  {project.tech
-                    .slice(0, 3)
-                    .map((tech, i) => (
-
-                      <span
-                        key={i}
-                        className="px-2 py-0.5 text-[10px] bg-gold/10 text-gold rounded-full"
-                      >
-                        {tech}
-                      </span>
-
-                    ))}
-
+                  {project.tech.slice(0, 3).map((tech, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-0.5 text-[10px] bg-gold/10 text-gold rounded-full"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
-
               </div>
-
             </motion.div>
-
           ))}
-
         </div>
-
       </div>
     </section>
   );
 };
 
 export default Projects;
-
