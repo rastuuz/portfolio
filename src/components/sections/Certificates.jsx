@@ -13,6 +13,11 @@ const Certificates = () => {
 
   const [selectedCertificate, setSelectedCertificate] = useState(null);
   const [currentPmrCertificate, setCurrentPmrCertificate] = useState(0);
+  const [slideDirection, setSlideDirection] = useState(1);
+
+  // =========================
+  // CERTIFICATES DATA
+  // =========================
 
   const certificates = [
     {
@@ -56,6 +61,27 @@ const Certificates = () => {
   ];
 
   // =========================
+  // SLIDE ANIMATION
+  // =========================
+
+  const slideVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? "100%" : "-100%",
+      opacity: 1,
+    }),
+
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+
+    exit: (direction) => ({
+      x: direction > 0 ? "-100%" : "100%",
+      opacity: 1,
+    }),
+  };
+
+  // =========================
   // OPEN CERTIFICATE
   // =========================
 
@@ -64,7 +90,18 @@ const Certificates = () => {
 
     if (certificate.type === "multiple") {
       setCurrentPmrCertificate(0);
+      setSlideDirection(1);
     }
+  };
+
+  // =========================
+  // CLOSE CERTIFICATE
+  // =========================
+
+  const closeCertificate = () => {
+    setSelectedCertificate(null);
+    setCurrentPmrCertificate(0);
+    setSlideDirection(1);
   };
 
   // =========================
@@ -72,6 +109,10 @@ const Certificates = () => {
   // =========================
 
   const previousPmrCertificate = () => {
+    if (!selectedCertificate?.images?.length) return;
+
+    setSlideDirection(-1);
+
     setCurrentPmrCertificate((prev) => {
       if (prev === 0) {
         return selectedCertificate.images.length - 1;
@@ -86,6 +127,10 @@ const Certificates = () => {
   // =========================
 
   const nextPmrCertificate = () => {
+    if (!selectedCertificate?.images?.length) return;
+
+    setSlideDirection(1);
+
     setCurrentPmrCertificate((prev) => {
       if (prev === selectedCertificate.images.length - 1) {
         return 0;
@@ -435,7 +480,7 @@ const Certificates = () => {
               p-4
               md:p-8
             "
-            onClick={() => setSelectedCertificate(null)}
+            onClick={closeCertificate}
           >
             <motion.div
               initial={{
@@ -478,7 +523,7 @@ const Certificates = () => {
 
               <button
                 type="button"
-                onClick={() => setSelectedCertificate(null)}
+                onClick={closeCertificate}
                 className="
                   absolute
                   top-4
@@ -515,7 +560,7 @@ const Certificates = () => {
                   p-3
                   md:p-5
                   max-h-[90vh]
-                  overflow-auto
+                  overflow-hidden
                   flex
                   items-center
                   justify-center
@@ -527,7 +572,7 @@ const Certificates = () => {
                 ================================================== */}
 
                 {selectedCertificate.type === "multiple" ? (
-                  <div className="relative w-full flex items-center justify-center">
+                  <div className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
 
                     {/* =========================
                         PREVIOUS BUTTON
@@ -566,44 +611,51 @@ const Certificates = () => {
                     </button>
 
                     {/* =========================
-                        PMR CERTIFICATE IMAGE
+                        PMR CERTIFICATE SLIDER
                     ========================= */}
 
-                    <AnimatePresence mode="wait">
-                      <motion.img
-                        key={currentPmrCertificate}
-                        initial={{
-                          opacity: 0,
-                          x: 20,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          x: 0,
-                        }}
-                        exit={{
-                          opacity: 0,
-                          x: -20,
-                        }}
-                        transition={{
-                          duration: 0.25,
-                        }}
-                        src={
-                          selectedCertificate.images[
-                            currentPmrCertificate
-                          ]
-                        }
-                        alt={`${selectedCertificate.title} ${
-                          currentPmrCertificate + 1
-                        }`}
-                        className="
-                          w-full
-                          h-auto
-                          max-h-[82vh]
-                          object-contain
-                          rounded-xl
-                        "
-                      />
-                    </AnimatePresence>
+                    <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
+
+                      <AnimatePresence
+                        initial={false}
+                        custom={slideDirection}
+                        mode="sync"
+                      >
+                        <motion.img
+                          key={currentPmrCertificate}
+                          custom={slideDirection}
+                          variants={slideVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{
+                            x: {
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 30,
+                            },
+                          }}
+                          src={
+                            selectedCertificate.images[
+                              currentPmrCertificate
+                            ]
+                          }
+                          alt={`${selectedCertificate.title} ${
+                            currentPmrCertificate + 1
+                          }`}
+                          className="
+                            absolute
+                            inset-0
+                            w-full
+                            h-full
+                            object-contain
+                            rounded-xl
+                            select-none
+                          "
+                        />
+                      </AnimatePresence>
+
+                    </div>
 
                     {/* =========================
                         NEXT BUTTON
@@ -651,6 +703,7 @@ const Certificates = () => {
                         bottom-3
                         left-1/2
                         -translate-x-1/2
+                        z-20
                         px-4
                         py-2
                         rounded-full
@@ -666,8 +719,10 @@ const Certificates = () => {
                       {currentPmrCertificate + 1} /{" "}
                       {selectedCertificate.images.length}
                     </div>
+
                   </div>
                 ) : (
+
                   /* ==================================================
                      SINGLE CERTIFICATE
                   ================================================== */
@@ -675,9 +730,11 @@ const Certificates = () => {
                   <motion.img
                     initial={{
                       opacity: 0,
+                      scale: 0.98,
                     }}
                     animate={{
                       opacity: 1,
+                      scale: 1,
                     }}
                     transition={{
                       duration: 0.3,
@@ -692,7 +749,9 @@ const Certificates = () => {
                       rounded-xl
                     "
                   />
+
                 )}
+
               </div>
             </motion.div>
           </motion.div>
