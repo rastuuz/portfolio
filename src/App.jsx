@@ -26,7 +26,7 @@ function App() {
 
     const timer = setTimeout(() => {
       setShowIntro(false);
-    }, 1850);
+    }, 1800);
 
     return () => clearTimeout(timer);
   }, []);
@@ -57,7 +57,8 @@ function App() {
         {/* =====================================================
             INTRO
         ====================================================== */}
-        <AnimatePresence>
+
+        <AnimatePresence mode="wait">
           {showIntro && (
             <motion.div
               className="
@@ -68,20 +69,107 @@ function App() {
                 overflow-hidden
               "
               initial={{
-                y: 0,
+                opacity: 1,
               }}
               exit={{
-                y: "-100%",
-              }}
-              transition={{
-                duration: 0.85,
-                ease: [0.76, 0, 0.24, 1],
+                opacity: 1,
               }}
             >
 
-              {/* =============================================
+              {/* =================================================
+                  TOP PANEL
+              ================================================= */}
+
+              <motion.div
+                className="
+                  absolute
+                  inset-x-0
+                  top-0
+                  h-1/2
+                  bg-dark
+                  z-20
+                "
+                initial={{
+                  y: 0,
+                }}
+                exit={{
+                  y: "-100%",
+                }}
+                transition={{
+                  duration: 1,
+                  delay: 1.25,
+                  ease: [0.76, 0, 0.24, 1],
+                }}
+              />
+
+              {/* =================================================
+                  BOTTOM PANEL
+              ================================================= */}
+
+              <motion.div
+                className="
+                  absolute
+                  inset-x-0
+                  bottom-0
+                  h-1/2
+                  bg-dark
+                  z-20
+                "
+                initial={{
+                  y: 0,
+                }}
+                exit={{
+                  y: "100%",
+                }}
+                transition={{
+                  duration: 1,
+                  delay: 1.25,
+                  ease: [0.76, 0, 0.24, 1],
+                }}
+              />
+
+              {/* =================================================
+                  GOLD CENTER LINE
+              ================================================= */}
+
+              <motion.div
+                className="
+                  absolute
+                  left-0
+                  top-1/2
+                  -translate-y-1/2
+                  h-px
+                  bg-[#d8b45a]
+                  z-30
+                "
+                initial={{
+                  width: 0,
+                  opacity: 0,
+                }}
+                animate={{
+                  width: "100%",
+                  opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                }}
+                transition={{
+                  width: {
+                    duration: 0.9,
+                    delay: 0.2,
+                    ease: [0.76, 0, 0.24, 1],
+                  },
+                  opacity: {
+                    duration: 0.3,
+                    delay: 0.2,
+                  },
+                }}
+              />
+
+              {/* =================================================
                   TOP BAR
-              ============================================== */}
+              ================================================= */}
+
               <motion.div
                 className="
                   absolute
@@ -95,18 +183,23 @@ function App() {
                   flex
                   items-center
                   justify-between
+                  z-40
                 "
                 initial={{
                   opacity: 0,
-                  y: -15,
+                  y: -20,
                 }}
                 animate={{
                   opacity: 1,
                   y: 0,
                 }}
+                exit={{
+                  opacity: 0,
+                  y: -20,
+                }}
                 transition={{
-                  duration: 0.5,
-                  delay: 0.05,
+                  duration: 0.6,
+                  delay: 0.1,
                 }}
               >
                 <span
@@ -130,14 +223,14 @@ function App() {
                     text-gray-500
                   "
                 >
-                  Portfolio 
+                  Portfolio
                 </span>
               </motion.div>
 
-
-              {/* =============================================
+              {/* =================================================
                   MAIN CONTENT
-              ============================================== */}
+              ================================================= */}
+
               <div
                 className="
                   absolute
@@ -147,12 +240,29 @@ function App() {
                   px-8
                   md:px-12
                   lg:px-16
+                  z-30
                 "
               >
+                <motion.div
+                  className="w-full"
+                  initial={{
+                    scale: 1,
+                  }}
+                  exit={{
+                    scale: 1.08,
+                    opacity: 0,
+                  }}
+                  transition={{
+                    duration: 1,
+                    delay: 1.05,
+                    ease: [0.76, 0, 0.24, 1],
+                  }}
+                >
 
-                <div className="w-full">
+                  {/* =================================================
+                      SMALL LABEL
+                  ================================================= */}
 
-                  {/* Small label */}
                   <motion.div
                     className="
                       flex
@@ -162,15 +272,15 @@ function App() {
                     "
                     initial={{
                       opacity: 0,
-                      x: -25,
+                      x: -35,
                     }}
                     animate={{
                       opacity: 1,
                       x: 0,
                     }}
                     transition={{
-                      duration: 0.55,
-                      delay: 0.15,
+                      duration: 0.65,
+                      delay: 0.2,
                       ease: [0.22, 1, 0.36, 1],
                     }}
                   >
@@ -186,13 +296,25 @@ function App() {
                       Welcome to my portfolio
                     </span>
 
-                    <span className="h-px w-12 bg-[#d8b45a]/50" />
+                    <motion.span
+                      className="h-px bg-[#d8b45a]/50"
+                      initial={{
+                        width: 0,
+                      }}
+                      animate={{
+                        width: 48,
+                      }}
+                      transition={{
+                        duration: 0.5,
+                        delay: 0.55,
+                      }}
+                    />
                   </motion.div>
 
-
-                  {/* =========================================
+                  {/* =================================================
                       NAME
-                  ========================================== */}
+                  ================================================= */}
+
                   <div
                     className="
                       font-serif
@@ -207,7 +329,6 @@ function App() {
                       xl:text-[9rem]
                     "
                   >
-
                     {nameWords.map((word, index) => (
                       <div
                         key={word.text}
@@ -229,13 +350,15 @@ function App() {
                           initial={{
                             y: "110%",
                             opacity: 0,
+                            rotateX: 25,
                           }}
                           animate={{
                             y: "0%",
                             opacity: 1,
+                            rotateX: 0,
                           }}
                           transition={{
-                            duration: 0.8,
+                            duration: 0.85,
                             delay: 0.3 + index * 0.1,
                             ease: [0.22, 1, 0.36, 1],
                           }}
@@ -244,13 +367,12 @@ function App() {
                         </motion.span>
                       </div>
                     ))}
-
                   </div>
 
-
-                  {/* =========================================
+                  {/* =================================================
                       BOTTOM INFORMATION
-                  ========================================== */}
+                  ================================================= */}
+
                   <div
                     className="
                       mt-10
@@ -262,12 +384,10 @@ function App() {
                       md:gap-8
                     "
                   >
-
                     <motion.div
                       className="
                         h-px
                         bg-[#d8b45a]
-                        w-20
                         md:w-28
                       "
                       initial={{
@@ -277,8 +397,8 @@ function App() {
                         width: 112,
                       }}
                       transition={{
-                        duration: 0.6,
-                        delay: 0.75,
+                        duration: 0.7,
+                        delay: 0.8,
                         ease: "easeOut",
                       }}
                     />
@@ -293,7 +413,7 @@ function App() {
                       "
                       initial={{
                         opacity: 0,
-                        x: -10,
+                        x: -15,
                       }}
                       animate={{
                         opacity: 1,
@@ -301,21 +421,20 @@ function App() {
                       }}
                       transition={{
                         duration: 0.5,
-                        delay: 0.8,
+                        delay: 0.85,
                       }}
                     >
                       Software Developer
                     </motion.span>
-
                   </div>
 
-                </div>
+                </motion.div>
               </div>
 
+              {/* =================================================
+                  RIGHT SIDE
+              ================================================= */}
 
-              {/* =============================================
-                  RIGHT SIDE NUMBER
-              ============================================== */}
               <motion.div
                 className="
                   absolute
@@ -325,12 +444,16 @@ function App() {
                   bottom-10
                   hidden
                   md:block
+                  z-40
                 "
                 initial={{
                   opacity: 0,
                 }}
                 animate={{
                   opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
                 }}
                 transition={{
                   duration: 0.5,
@@ -344,32 +467,43 @@ function App() {
                     text-gray-600
                   "
                 >
-                
+              
                 </span>
               </motion.div>
 
+              {/* =================================================
+                  SMALL GOLD DOT
+              ================================================= */}
 
-              {/* =============================================
-                  BOTTOM LINE
-              ============================================== */}
               <motion.div
                 className="
                   absolute
-                  bottom-0
-                  left-0
-                  h-px
-                  bg-[#d8b45a]/40
+                  left-1/2
+                  top-1/2
+                  -translate-x-1/2
+                  -translate-y-1/2
+                  w-2
+                  h-2
+                  rounded-full
+                  bg-[#d8b45a]
+                  z-50
                 "
                 initial={{
-                  width: 0,
+                  scale: 0,
+                  opacity: 0,
                 }}
                 animate={{
-                  width: "100%",
+                  scale: [0, 1, 1],
+                  opacity: [0, 1, 1],
+                }}
+                exit={{
+                  scale: 0,
+                  opacity: 0,
                 }}
                 transition={{
-                  duration: 1.2,
-                  delay: 0.1,
-                  ease: "easeInOut",
+                  duration: 0.8,
+                  delay: 0.2,
+                  times: [0, 0.35, 1],
                 }}
               />
 
@@ -381,15 +515,17 @@ function App() {
         {/* =====================================================
             PORTFOLIO
         ====================================================== */}
+
         <motion.div
           initial={{
             opacity: 0,
           }}
           animate={{
-            opacity: showIntro ? 1 : 1,
+            opacity: showIntro ? 0 : 1,
           }}
           transition={{
-            duration: 0.5,
+            duration: 0.7,
+            ease: "easeOut",
           }}
         >
           <Navbar />
@@ -398,7 +534,7 @@ function App() {
             <Hero />
             <About />
             <Projects />
-            <Certificates/>
+            <Certificates />
             <Contact />
           </main>
 
@@ -411,3 +547,4 @@ function App() {
 }
 
 export default App;
+
